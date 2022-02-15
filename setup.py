@@ -1,19 +1,40 @@
-from setuptools import setup, find_packages
+from setuptools import setup
+import os
+import sys
+
+_here = os.path.abspath(os.path.dirname(__file__))
+
+if sys.version_info[0] < 3:
+    with open(os.path.join(_here, 'README.rst')) as f:
+        long_description = f.read()
+else:
+    with open(os.path.join(_here, 'README.rst'), encoding='utf-8') as f:
+        long_description = f.read()
+
+version = {}
+with open(os.path.join(_here, 'prettyplot', 'version.py')) as f:
+    exec(f.read(), version)
 
 setup(
     name='prettyplot',
-    version='0.0',
+    version=version['__version__'],
+    description=('Framework for quick and pretty plotting.'),
+    long_description=long_description,
     author='Mariia Redchuk',
     author_email='mariia.redchuk@gmail.com',
-    description='Python class for quick and pretty plotting',
-    long_description='',
-    packages=find_packages(),
-    install_requires=[
-        'matplotlib'
-#        'numpy',
-#        'pandas',
-        # 'fcutils @ https://github.com/legend-exp/pyfcutils.git#egg=1.0.0'
-    ],
-#    cmdclass=dict(build_ext=CMakeBuild, build_py=PygamaBuild, develop=PygamaDev),
-    zip_safe=False,
-)
+    url='https://github.com/sagitta42/prettyplot',
+    license='MPL-2.0',
+    packages=['prettyplot'],
+#   yes dependencies in this example
+   install_requires=[
+       'matplotlib'#==3.3.2',
+   ],
+#   no scripts in this example
+#   scripts=['bin/a-script'],
+    include_package_data=True,
+    classifiers=[
+        'Development Status :: 5 - Production/Stable',
+        'Intended Audience :: Science/Research',
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3.6'],
+    )
