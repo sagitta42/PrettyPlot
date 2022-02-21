@@ -63,11 +63,16 @@ class PrettyPlot:
 
         if out:
             # draw legend at the bottom
-            self.axes[-1].legend(loc='upper center', bbox_to_anchor=(0.5, -0.25),\
+            leg_ax = self.n == 'paramspace' ? 0 : -1
+            # the return legend object is needed later for tight layout
+            self.lgd = self.axes[leg_ax].legend(loc='upper center', bbox_to_anchor=(0.5, -0.25),\
                 fancybox=True, shadow=False, ncol=ncol,fontsize=15)
             # remove legends from all other subplots
-            for ax in self.axes[:-1]:
-                legend = ax.legend()
+            other_ax = range(len(self.axes)).remove(leg_ax)
+            # for ax in self.axes[:-1]:
+            for idx in other_ax:
+                # legend = ax.legend()
+                legend = self.axes[idx].legend()
                 legend.remove()
         else:
             # draw legend on each axis
@@ -148,6 +153,8 @@ class PrettyPlot:
             self.fig.tight_layout(rect=[0,0,1,0.97])
 
 
+
+
     def figure(self, name=None):
         '''
         Show the plot or save an image.
@@ -160,7 +167,8 @@ class PrettyPlot:
             print ('(NOT SAVED)')
             plt.show()
         else:
-            self.fig.savefig(name)
+            # self.fig.savefig(name)
+            self.fig.savefig(name, bbox_extra_artists=(self.lgd), bbox_inches='tight')
             print ('(saved)')
 
 
