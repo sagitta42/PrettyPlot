@@ -67,9 +67,9 @@ class PrettyPlot:
             # the return legend object is needed later for tight layout
             self.lgd = self.axes[leg_ax].legend(loc='upper center',\
                 bbox_to_anchor=(0.5, -0.15), fancybox=True, shadow=False,\
-                    ncol=ncol,fontsize=15)
+                    ncol=ncol, fontsize=15)
             # remove legends from all other subplots
-            other_ax = range(len(self.axes)).remove(leg_ax)
+            other_ax = list(range(len(self.axes))); other_ax.remove(leg_ax)
             # for ax in self.axes[:-1]:
             for idx in other_ax:
                 # legend = ax.legend()
