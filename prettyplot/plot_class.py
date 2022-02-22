@@ -63,7 +63,7 @@ class PrettyPlot:
 
         if out:
             # draw legend at the bottom
-            leg_ax = self.n == 'paramspace' ? 0 : -1
+            leg_ax = 0 if self.n == 'paramspace' else -1
             # the return legend object is needed later for tight layout
             self.lgd = self.axes[leg_ax].legend(loc='upper center', bbox_to_anchor=(0.5, -0.15),\
                 fancybox=True, shadow=False, ncol=ncol, fontsize=15)
