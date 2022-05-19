@@ -6,13 +6,14 @@ import sys
 import pandas as pd
 
 class PrettyPlot:
-    def __init__(self,figsize,n=1,sharex=False):
+    def __init__(self, figsize, n=1, sharex=False):
         '''
         figsize [(w,h)]: tuple with figure width x height
-        n [int|string]: number of subplots (int) or type of plot ('paramspace')
+        n [int|string|tuple]: number of subplots (int or tuple for NxM) or type of plot ('paramspace')
 
         '''
         self.n = n # need later for tight layout
+        self.fig = None
 
         if n == 'paramspace':
             # definitions for the axes
@@ -35,6 +36,7 @@ class PrettyPlot:
             # plot at the side
             self.axes.append(plt.axes(rect_histy))
             self.axes[2].tick_params(direction='in', labelleft=False)
+
         elif type(n) == int:
             fig, ax = plt.subplots(n,figsize=figsize, sharex=sharex)
             self.fig = fig
@@ -42,13 +44,29 @@ class PrettyPlot:
             self.ax = ax
             # array of all our axes; new axes get added here too (e.g. two subplots, one has 2 y axes, means in total 5 axes in the list)
             self.axes = list(ax) if n > 1 else [ax]
-        else:
-            self.fig = plt.figure(figsize=figsize)
+
+        elif type(n) in (tuple, list):
+            print('helo')
+            # e.g. (2,3) for 2x3 subplots
+            if len(n) == 2:
+                fig, ax = plt.subplots(n[0], n[1], figsize=figsize)
+                self.fig = fig
+                self.ax = ax
+                self.axes = list(ax)
 
             # e.g.[211, 223, 224]
-            self.axes = []
-            for subp in n:
-                self.axes.append(plt.subplot(subp))
+            elif len(n) > 2:
+                self.fig = plt.figure(figsize=figsize)
+
+                self.axes = []
+                for subp in n:
+                    self.axes.append(plt.subplot(subp))
+            
+            else:
+                print_format()
+
+        else:
+            print_format()
 
 
     def legend(self, out=False, ncol=1, title=None, pos=None, axes=None):
@@ -179,4 +197,13 @@ class PrettyPlot:
         self.axes.append(ax2)
 
     def __del__(self):
-        plt.close(self.fig)
+        if self.fig:
+            plt.close(self.fig)
+
+
+def print_format():
+    print('Provide n in format:')
+    print('- int for number of subplots')
+    print('- tuple (N, M) for NxM subplots')
+    print('- tuple e.g. (211,223,224) for specific subplots')
+    print('- "paramspace" for a central plot with 2 histos on the sides')
