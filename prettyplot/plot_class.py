@@ -5,6 +5,8 @@ import matplotlib.pyplot as plt
 import sys
 import pandas as pd
 
+from itertools import chain # to flatten the list of axes for NxM plot
+
 class PrettyPlot:
     def __init__(self, figsize, n=1, sharex=False):
         '''
@@ -46,13 +48,12 @@ class PrettyPlot:
             self.axes = list(ax) if n > 1 else [ax]
 
         elif type(n) in (tuple, list):
-            print('helo')
             # e.g. (2,3) for 2x3 subplots
             if len(n) == 2:
                 fig, ax = plt.subplots(n[0], n[1], figsize=figsize)
                 self.fig = fig
                 self.ax = ax
-                self.axes = list(ax)
+                self.axes = list(chain(*ax))
 
             # e.g.[211, 223, 224]
             elif len(n) > 2:
