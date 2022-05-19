@@ -16,6 +16,7 @@ class PrettyPlot:
         '''
         self.n = n # need later for tight layout
         self.fig = None
+        self.lgd = None # if lgd is out, need to fit in the tight layout
 
         if n == 'paramspace':
             # definitions for the axes
@@ -94,7 +95,7 @@ class PrettyPlot:
                 legend = self.axes[idx].legend()
                 legend.remove()
 
-            return self.lgd 
+            # return self.lgd 
         else:
             # draw legend on each axis
             # in case these are not subplots, but one plot with two y axes, legends might crash
@@ -180,7 +181,7 @@ class PrettyPlot:
             print ('(NOT SAVED)')
             plt.show()
         else:
-            self.fig.savefig(name, bbox_extra_artists=(self.lgd,), bbox_inches='tight')
+            self.fig.savefig(name, bbox_extra_artists=(self.lgd,) if self.lgd else None, bbox_inches='tight')
             print ('(saved)')
 
 
