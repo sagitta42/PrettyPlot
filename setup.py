@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='prettyplot',
-    version='0.0',
+    version='1.0',
     author='Mariia Redchuk',
     author_email='mariia.redchuk@gmail.com',
     url='https://github.com/sagitta42/prettyplot',
