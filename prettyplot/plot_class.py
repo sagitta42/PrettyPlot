@@ -2,8 +2,6 @@
 
 import matplotlib
 import matplotlib.pyplot as plt
-import sys
-import pandas as pd
 
 from itertools import chain # to flatten the list of axes for NxM plot
 
@@ -77,25 +75,22 @@ class PrettyPlot:
 
         out [True|False]: legend outside of the plot in the bottom (default False)
         ncol [int]: number of columns in the legend (default 1)
-        pos [list of int|string]: position of the legend (default "best").
-            Important for plotting with a second Y axis (see below)
+        title [string]: legend title
+        pos [list of int|string||float]: position of the legend (default "best").
+            In case out=False: pos of legend in the plot (e.g. "upper left" or 3)
+            In case out=True, moving bbox down (float order of 0.05)
         '''
 
         if out:
-            # draw legend at the bottom
-            leg_ax = 0 if self.n == 'paramspace' else -1
+            ## draw legend at the bottom
             # the return legend object is needed later for tight layout
-            self.lgd = self.axes[leg_ax].legend(loc='upper center', bbox_to_anchor=(0.5, -0.15),\
-                fancybox=True, shadow=False, ncol=ncol, fontsize=15)
+            handles, labels = self.axes[-1].get_legend_handles_labels()
+            self.lgd = self.fig.legend(handles, labels, loc = 'lower center', ncol=ncol, fontsize=15, bbox_to_anchor=(0.5, 0.05-pos)) #labelspacing=0. )
             # remove legends from all other subplots
-            other_ax = list(range(len(self.axes))); other_ax.remove(leg_ax)
-            # for ax in self.axes[:-1]:
-            for idx in other_ax:
-                # legend = ax.legend()
-                legend = self.axes[idx].legend()
+            for ax in self.axes:
+                legend = ax.legend()
                 legend.remove()
 
-            # return self.lgd 
         else:
             # draw legend on each axis
             # in case these are not subplots, but one plot with two y axes, legends might crash
@@ -123,6 +118,12 @@ class PrettyPlot:
         grid ["major"|"minor"]: only major grid, or also minor;
             same as the grid argument of the function ax.grid()
         '''
+
+        ## figure legend (if present)
+        if self.lgd:
+            if self.lgd.get_title(): self.lgd.get_title().set_fontsize(19 + large)
+            for t in self.lgd.get_texts():
+                t.set_fontsize(17 + large)        
 
         for ax in self.axes:
             ## make better x and y limits
@@ -153,7 +154,7 @@ class PrettyPlot:
             ax.get_yaxis().get_label().set_fontsize(17 + large)
             ax.title.set_fontsize(20)
 
-            ## increase legend font
+            ## increase legend font (if present)
             legend = ax.get_legend()
             if legend:
                 if legend.get_title(): legend.get_title().set_fontsize(19 + large)
